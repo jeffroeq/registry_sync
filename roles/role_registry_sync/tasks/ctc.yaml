@@ -1,0 +1,3 @@
+---
+- set_fact:
+    target_registry: 'registry-ocp-ctc.domain.com:5000'

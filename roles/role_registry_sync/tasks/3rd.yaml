@@ -1,0 +1,8 @@
+---
+- set_fact:
+    src_registry: ''
+    target_registry: ''
+    image_tag: 'latest'
+
+    images:
+

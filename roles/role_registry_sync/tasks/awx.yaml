@@ -1,0 +1,9 @@
+---
+- set_fact:
+    images:
+      - ansible/awx_web
+      - ansible/awx_task
+   
+    src_registry: 'docker.io'
+    target_registry: 'registry-ocp-ctc.domain.com:5000' 
+    image_tag: latest

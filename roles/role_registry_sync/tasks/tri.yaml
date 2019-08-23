@@ -1,0 +1,9 @@
+---
+- set_fact:
+    images:
+      - netapp/trident
+      - netapp/trident-launcher
+   
+    src_registry: 'docker.io'
+    target_registry: 'registry-ocp-ctc.domain.com:5000' 
+    image_tag: 18.07.0

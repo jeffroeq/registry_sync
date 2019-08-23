@@ -1,0 +1,8 @@
+---
+# Ansible role to download, tag, push and clean up.
+# Example: ansible-playbook -c local -v pb_registry_sync.yaml -e rhc=True
+# Options: rhi, rhc, tri, awx, thrd, prom
+- hosts: 127.0.0.1
+  gather_facts: yes
+  roles:
+  - { role: role_registry_sync }

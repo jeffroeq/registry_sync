@@ -1,0 +1,107 @@
+---
+# tasks file for role_registry_sync
+- name: Set Red Hat Cluster Image Info
+  include: rhi.yaml
+  when: rhi
+
+- name: Set Trident Image Info
+  include: tri.yaml
+  when: tri
+
+- name: Set AWX Image Info
+  include: awx.yaml
+  when: awx
+
+- name: Set RH Component Image info
+  include: rhc.yaml
+  when: rhc
+
+- name: Set RH Prometheus Image info
+  include: prom.yaml
+  when: prom
+
+- name: Set Source2Image info
+  include: s2i.yaml
+  when: s2i
+
+- name: Set 3rd party Image info
+  include: 3rd.yaml
+  when: thrd 
+
+- name: Set facts for CTC
+  include: ctc.yaml
+  when: "'ctc' == ansible_local.cluster.env.dc"
+
+- name: Set facts for DTC
+  include: dtc.yaml
+  when: "'dtc' == ansible_local.cluster.env.dc"
+
+- name: "Ensure docker is running"
+  service:
+    name: "docker"
+    state: started
+
+- name: "Install software dependency (python-docker-py)"
+  yum:
+    name: python-docker-py
+    state: present
+
+- name: "Pull X images"
+  docker_image:
+    name: "{{ item }}"
+    repository: "{{ src_registry }}"
+    state: present
+    force: yes
+    tag: "{{ image_tag }}"
+  ignore_errors: yes
+  register: pull_result
+  with_items:
+    - "{{ images }}"
+
+- name: "Tag image into target registry" 
+  docker_image:
+    name: "{{ src_registry }}/{{ item }}"
+    repository: "{{ target_registry }}/{{ item }}"
+    tag: "{{ image_tag }}"
+    force: yes
+  with_items:
+    - "{{ images }}"
+  #when: pull_result|succeeded
+  tags:
+  - go
+
+- name: "Push image to target registry"
+  docker_image:
+    name: "{{ target_registry }}/{{ item }}"
+    tag: "{{ image_tag }}"
+    push: true
+  with_items:
+    - "{{ images }}"
+  #when: pull_result|succeeded
+  tags:
+  - go1
+
+- name: "Cleanup target image"
+  docker_image:
+    name: "{{ target_registry }}/{{ item }}"
+    tag: "{{ image_tag }}"
+    state: absent
+    force: yes
+  with_items:
+    - "{{ images }}"
+  #when: pull_result|succeeded
+  tags:
+  - go1
+
+- name: "Cleanup src image"
+  docker_image:
+    name: "{{ src_registry }}/{{ item }}"
+    tag: "{{ image_tag }}"
+    state: absent
+    force: yes
+  with_items:
+    - "{{ images }}"
+  #when: pull_result|succeeded
+  tags:
+  - go1
+

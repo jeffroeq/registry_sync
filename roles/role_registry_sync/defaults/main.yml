@@ -1,0 +1,9 @@
+---
+# defaults file for role_registry_sync
+rhi: false
+rhc: false
+tri: false
+awx: false
+thrd: false
+prom: false
+s2i: false

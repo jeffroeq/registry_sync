@@ -1,0 +1,14 @@
+---
+- set_fact:
+    src_registry: 'registry.access.redhat.com'
+    image_tag: 'v3.9.57'
+
+    images:
+      - openshift3/prometheus
+      - openshift3/prometheus-alert-buffer
+      - openshift3/prometheus-alertmanager
+      - openshift3/prometheus-node-exporter
+      - openshift3/ose-service-catalog
+      - openshift3/ose-ansible-service-broker
+      - openshift3/mediawiki-apb
+      - openshift3/postgresql-apb
